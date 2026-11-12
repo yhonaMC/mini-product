@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CF0000010000000000000001 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0000020000000000000001 /* CurrencyFormatter.swift */; };
+		CF0000010000000000000002 /* RCTCurrencyFormatter.mm in Sources */ = {isa = PBXBuildFile; fileRef = CF0000020000000000000002 /* RCTCurrencyFormatter.mm */; };
 		0C80B921A6F3F58F76C31292 /* libPods-MiniTienda.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-MiniTienda.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
@@ -14,6 +16,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CF0000020000000000000001 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CurrencyFormatter.swift; path = MiniTienda/CurrencyFormatter.swift; sourceTree = "<group>"; };
+		CF0000020000000000000002 /* RCTCurrencyFormatter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = RCTCurrencyFormatter.mm; path = MiniTienda/RCTCurrencyFormatter.mm; sourceTree = "<group>"; };
+		CF0000020000000000000003 /* RCTCurrencyFormatter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RCTCurrencyFormatter.h; path = MiniTienda/RCTCurrencyFormatter.h; sourceTree = "<group>"; };
+		CF0000020000000000000004 /* MiniTienda-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "MiniTienda-Bridging-Header.h"; path = "MiniTienda/MiniTienda-Bridging-Header.h"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* MiniTienda.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniTienda.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MiniTienda/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MiniTienda/Info.plist; sourceTree = "<group>"; };
@@ -43,6 +49,10 @@
 			children = (
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
+				CF0000020000000000000001 /* CurrencyFormatter.swift */,
+				CF0000020000000000000002 /* RCTCurrencyFormatter.mm */,
+				CF0000020000000000000003 /* RCTCurrencyFormatter.h */,
+				CF0000020000000000000004 /* MiniTienda-Bridging-Header.h */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
@@ -245,6 +255,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				761780ED2CA45674006654EE /* AppDelegate.swift in Sources */,
+				CF0000010000000000000001 /* CurrencyFormatter.swift in Sources */,
+				CF0000010000000000000002 /* RCTCurrencyFormatter.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,6 +286,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = MiniTienda;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OBJC_BRIDGING_HEADER = "MiniTienda/MiniTienda-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -301,6 +314,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = MiniTienda;
 				SWIFT_VERSION = 5.0;
+				SWIFT_OBJC_BRIDGING_HEADER = "MiniTienda/MiniTienda-Bridging-Header.h";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

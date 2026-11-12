@@ -3,7 +3,8 @@ import { StatusBar, StyleSheet } from 'react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { BaseScreen } from './src/screens/BaseScreen';
+import { RootNavigator } from './src/navigation/RootNavigator';
+import { ErrorBoundary } from './src/components/ErrorBoundary';
 import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 
 const queryClient = new QueryClient({
@@ -15,7 +16,9 @@ function AppContent() {
   return (
     <>
       <StatusBar barStyle={isDark ? 'light-content' : 'dark-content'} />
-      <BaseScreen />
+      <ErrorBoundary>
+        <RootNavigator />
+      </ErrorBoundary>
     </>
   );
 }

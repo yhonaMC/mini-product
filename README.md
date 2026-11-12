@@ -2,7 +2,7 @@
 
 Prueba técnica Senior React Native: app iOS y Android con productos de DummyJSON y favoritos locales. React Native CLI **0.81.6**, New Architecture y TypeScript estricto, sin Expo.
 
-**Estado actual: Fase 0.** La pantalla inicial permite comprobar el arranque y cambiar la apariencia. Las pantallas funcionales empiezan después de validar la base en ambas plataformas. [Plan](PLAN.md), [revisión de requisitos](docs/REQUIREMENTS_REVIEW.md), [contratos](docs/CONTRACTS.md) y [evidencias](docs/VALIDATION.md).
+**Estado actual: Fase 1.** La base ya se validó en Android e iOS. Se integran HTTP, favoritos, navegación y formateo nativo; las pantallas funcionales se desarrollan en Fase 2. [Plan](PLAN.md), [revisión de requisitos](docs/REQUIREMENTS_REVIEW.md), [contratos](docs/CONTRACTS.md) y [evidencias](docs/VALIDATION.md).
 
 ## Entorno
 
@@ -15,7 +15,7 @@ Prueba técnica Senior React Native: app iOS y Android con productos de DummyJSO
 | Android                      | SDK / Build Tools 36; NDK 27.1.12297006                                    |
 | iOS en Codemagic             | Xcode 16.4, Node 22; Ruby/CocoaPods de la imagen, restricciones en Gemfile |
 
-En esta PC Windows se usa Node 26.13.0 y JDK 17.0.21. Las versiones exactas de npm se conservan en `package-lock.json`. Ruby debe ser compatible con `Gemfile` (se recomienda 3.2+); Bundler instala CocoaPods y sus restricciones. Las versiones resueltas de Ruby, Bundler, CocoaPods y Xcode se registran en el log del build de Codemagic, sin atribuirles validación antes de ejecutarlo.
+En esta PC Windows se usa Node 26.13.0 y JDK 17.0.21. En el build iOS aprobado se verificaron **Node 22.23.5, Ruby 3.3.6, Bundler 2.6.9, CocoaPods 1.15.2 y Xcode 16.4 (16F6)**. Se publican en `ios-tool-versions.txt` como artefacto de cada build. Las versiones exactas de npm se conservan en `package-lock.json`; Bundler resuelve las restricciones de `Gemfile`.
 
 ## Android desde Windows
 
@@ -46,7 +46,9 @@ Para compilar solo el ABI del emulador local: añadir `-PreactNativeArchitecture
 1. Subir este proyecto a un repositorio de GitHub.
 2. En [Codemagic](https://codemagic.io/apps), conectar ese repositorio y usar `codemagic.yaml` de la raíz.
 3. Ejecutar el workflow `ios-simulator` en la rama `main`.
-4. Revisar instalación de pods, build, smoke test y artefactos: `MiniTienda.app`, ZIP del simulador, logs y `ios-home.png`.
+4. Revisar instalación de pods, build, smoke test y artefactos: `MiniTienda.app`, ZIP del simulador, logs, `ios-tool-versions.txt` e `ios-home.png`.
+
+Este repositorio ya tiene un webhook activo: los pushes a `main` también disparan iOS automáticamente. Confirmar los minutos disponibles antes de usarlo de forma intensiva.
 
 El workflow usa una máquina macOS M2 y Xcode 16.4. Compila **Release para simulador sin firma**, comprueba el bundle JavaScript, selecciona un iPhone disponible, espera su arranque, instala, abre y verifica que el proceso sigue vivo después de 20 segundos. No depende de Metro ni requiere cuenta de Apple Developer. Este artefacto no se instala en un iPhone físico.
 
@@ -88,4 +90,12 @@ La prueba inicial de integración pulsa el control accesible para cambiar la apa
 - **Arquitectura:** `api`, `domain`, `hooks`, `screens`, `components`, `store` y `storage`; `navigation`, `theme`, `utils` y `native` separan responsabilidades transversales y permiten tests aislados.
 - **CI:** GitHub Actions valida calidad y Android en cada push; Codemagic resuelve la compilación y el arranque iOS desde Windows.
 
-La caché de imágenes y el módulo de moneda se documentarán con la implementación efectivamente compilada. Las capturas reales y el alcance final de validación se añadirán al completar sus puertas, sin mostrar imágenes de una app inexistente.
+FastImage 8.13.0 usa caché nativa de Glide/SDWebImage. Los assets de DummyJSON tienen URL estable: se usa política `immutable` para aprovechar memoria/disco; la caché puede ser desalojada por el sistema y no garantiza imágenes offline indefinidamente. Los datos completos de favoritos se conservan por separado en MMKV.
+
+`CurrencyFormatter` tiene spec Codegen, implementación Kotlin/Swift y adaptador ObjC++. `formatPrice` delega al módulo cuando está registrado; `Intl` permite fallback cuando no existe (por ejemplo, en tests). Un error de un módulo registrado se propaga para no esconder defectos nativos. El formato monetario puede variar ligeramente entre sistemas. DummyJSON se presenta en USD; no se aplica conversión de divisas.
+
+## Evidencia de la base (Fase 0)
+
+Capturas reales del mismo código de base, antes de desarrollar catálogo y favoritos. [iOS aprobado](https://codemagic.io/app/6af632ef1de9516df029eb63/build/6af638c910a05158d81229d1) y [Android/CI aprobado](https://github.com/yhonaMC/mini-product/actions/runs/43316912477).
+
+<img src="docs/screenshots/android-base-light.png" alt="Base Android en modo claro" width="220" /> <img src="docs/screenshots/android-base-dark.png" alt="Base Android en modo oscuro" width="220" /> <img src="docs/screenshots/ios-base.png" alt="Base iOS compilada en Codemagic" width="220" />

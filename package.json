@@ -48,6 +48,19 @@
     "react-test-renderer": "19.1.4",
     "typescript": "5.9.3"
   },
+  "codegenConfig": {
+    "name": "MiniTiendaSpec",
+    "type": "modules",
+    "jsSrcsDir": "src/native",
+    "android": {
+      "javaPackageName": "com.minitienda.specs"
+    },
+    "ios": {
+      "modulesProvider": {
+        "CurrencyFormatter": "RCTCurrencyFormatter"
+      }
+    }
+  },
   "engines": {
     "node": ">=20.19.4"
   }

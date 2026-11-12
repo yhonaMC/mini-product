@@ -1,9 +1,14 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import App from '../App';
+import { BaseScreen } from '../src/screens/BaseScreen';
+import { ThemeProvider } from '../src/theme/ThemeProvider';
 
 test('changes appearance from the accessible control and can restore it', () => {
-  render(<App />);
+  render(
+    <ThemeProvider>
+      <BaseScreen />
+    </ThemeProvider>,
+  );
   const initialDark = screen.queryByText('Apariencia: oscura') !== null;
   fireEvent.press(
     screen.getByRole('button', {
