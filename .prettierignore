@@ -1,0 +1,8 @@
+node_modules
+android
+ios
+tmp
+output
+coverage
+package-lock.json
+PLAN.md

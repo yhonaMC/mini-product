@@ -1,0 +1,51 @@
+workflows:
+  ios-simulator:
+    name: iOS simulator - Release and smoke test
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      xcode: '16.4'
+      node: 22
+      cocoapods: default
+      vars:
+        XCODE_WORKSPACE: ios/MiniTienda.xcworkspace
+        XCODE_SCHEME: MiniTienda
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+      cancel_previous_builds: true
+    scripts:
+      - name: Install JavaScript dependencies
+        script: npm ci
+      - name: Static checks and tests
+        script: |
+          set -euo pipefail
+          npm run lint
+          npm run lint:format
+          npm run typecheck
+          npm test -- --ci --runInBand
+      - name: Install Ruby dependencies and pods
+        script: |
+          set -euo pipefail
+          ruby --version
+          bundle --version
+          xcodebuild -version
+          bundle config set --local path vendor/bundle
+          bundle install
+          bundle exec pod --version
+          bundle exec pod install --project-directory=ios
+      - name: Build standalone simulator app without signing
+        script: bash scripts/ci/ios-build.sh
+      - name: Launch simulator, check process and capture screen
+        script: bash scripts/ci/ios-smoke.sh
+    artifacts:
+      - build/ios/Build/Products/Release-iphonesimulator/MiniTienda.app
+      - build/ios-simulator.zip
+      - build/ios-home.png
+      - build/ios-build.log
+      - build/ios-launch.log
+      - build/ios-processes.log
