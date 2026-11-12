@@ -31,12 +31,16 @@ workflows:
       - name: Install Ruby dependencies and pods
         script: |
           set -euo pipefail
-          ruby --version
-          bundle --version
-          xcodebuild -version
+          mkdir -p build
+          {
+            node --version
+            ruby --version
+            bundle --version
+            xcodebuild -version
+          } | tee build/ios-tool-versions.txt
           bundle config set --local path vendor/bundle
           bundle install
-          bundle exec pod --version
+          bundle exec pod --version | tee -a build/ios-tool-versions.txt
           bundle exec pod install --project-directory=ios
       - name: Build standalone simulator app without signing
         script: bash scripts/ci/ios-build.sh
@@ -49,3 +53,4 @@ workflows:
       - build/ios-build.log
       - build/ios-launch.log
       - build/ios-processes.log
+      - build/ios-tool-versions.txt
