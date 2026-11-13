@@ -3,12 +3,15 @@ import { StyleSheet, Text, View } from 'react-native';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { BaseScreen } from '../screens/BaseScreen';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { ProductsScreen } from '../screens/Products/ProductsScreen';
+import { ProductDetailScreen } from '../screens/ProductDetail/ProductDetailScreen';
+import { FavoritesScreen } from '../screens/Favorites/FavoritesScreen';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { StorageNotice } from '../components/StorageNotice';
 import { useTheme } from '../theme/ThemeProvider';
 import { useFavorites } from '../hooks/useFavorites';
-import { DetailPlaceholder, FavoritesPlaceholder } from './PlaceholderScreens';
+import { useSelectionStore } from './selectionStore';
 import type { ProductsStackParamList, RootTabParamList } from './types';
 
 const Tabs = createBottomTabNavigator<RootTabParamList>();
@@ -16,6 +19,17 @@ const Stack = createNativeStackNavigator<ProductsStackParamList>();
 
 function renderThemeToggle() {
   return <ThemeToggle />;
+}
+
+function StackProductDetail({
+  route,
+}: NativeStackScreenProps<ProductsStackParamList, 'ProductDetail'>) {
+  return <ProductDetailScreen productId={route.params.productId} />;
+}
+
+function SelectedProductDetail() {
+  const productId = useSelectionStore(state => state.productId);
+  return <ProductDetailScreen productId={productId} />;
 }
 
 function ProductsNavigator() {
@@ -31,12 +45,12 @@ function ProductsNavigator() {
     >
       <Stack.Screen
         name="ProductsList"
-        component={BaseScreen}
+        component={ProductsScreen}
         options={{ title: 'MiniTienda' }}
       />
       <Stack.Screen
         name="ProductDetail"
-        component={DetailPlaceholder}
+        component={StackProductDetail}
         options={{ title: 'Detalle del producto' }}
       />
     </Stack.Navigator>
@@ -113,6 +127,10 @@ export function RootNavigator() {
               backgroundColor: colors.surface,
               borderTopColor: colors.border,
             },
+            tabBarBadgeStyle: {
+              backgroundColor: colors.primary,
+              color: colors.onPrimary,
+            },
             tabBarIcon: tabIcons[route.name],
           })}
         >
@@ -127,7 +145,7 @@ export function RootNavigator() {
           />
           <Tabs.Screen
             name="Detail"
-            component={DetailPlaceholder}
+            component={SelectedProductDetail}
             options={{
               title: 'Detalle',
               tabBarAccessibilityLabel: 'Ver detalle del producto seleccionado',
@@ -135,7 +153,7 @@ export function RootNavigator() {
           />
           <Tabs.Screen
             name="Favorites"
-            component={FavoritesPlaceholder}
+            component={FavoritesScreen}
             options={{
               title: 'Favoritos',
               tabBarAccessibilityLabel: 'Ver favoritos guardados',

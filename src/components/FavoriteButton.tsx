@@ -36,8 +36,7 @@ export function FavoriteButton({
       } favoritos`}
       accessibilityState={{ selected }}
       hitSlop={6}
-      onPress={event => {
-        event.stopPropagation();
+      onPress={() => {
         if (animated && !reducedMotion) {
           scale.value = withSequence(
             withTiming(1.25, { duration: 120 }),

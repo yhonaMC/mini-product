@@ -7,6 +7,8 @@ const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
  * @type {import('@react-native/metro-config').MetroConfig}
  */
 const config = {
+  // Leave memory for the Android emulator and native builds on the 16 GB host.
+  maxWorkers: 2,
   resolver: { blockList: [/[/\\]tmp[/\\].*/] },
 };
 

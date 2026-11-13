@@ -18,6 +18,14 @@ workflows:
           include: true
           source: true
       cancel_previous_builds: true
+    # Keep app verification automatic; documentation alone does not need macOS.
+    when:
+      changeset:
+        includes:
+          - '.'
+        excludes:
+          - '**/*.md'
+          - 'docs/**'
     scripts:
       - name: Install JavaScript dependencies
         script: npm ci

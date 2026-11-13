@@ -24,6 +24,7 @@ export function Skeleton({ detail = false }: { detail?: boolean }) {
 
   return (
     <Animated.View
+      accessible
       accessibilityRole="progressbar"
       accessibilityLabel="Cargando productos"
       style={[styles.container, animatedStyle]}

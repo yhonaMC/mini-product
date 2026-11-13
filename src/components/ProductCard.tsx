@@ -1,10 +1,10 @@
 import React, { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import FastImage from '@d11/react-native-fast-image';
 import type { Product } from '../domain/product';
 import { useTheme } from '../theme/ThemeProvider';
 import { FavoriteButton } from './FavoriteButton';
 import { PriceTag } from './PriceTag';
+import { ProductImage } from './ProductImage';
 
 interface Props {
   product: Product;
@@ -24,22 +24,20 @@ export const ProductCard = memo(function ProductCard({
         { backgroundColor: colors.surface, borderColor: colors.border },
       ]}
     >
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={`Ver detalle de ${product.title}`}
-        onPress={() => onPress(product.id)}
-        style={styles.content}
-      >
-        <FastImage
+      <View style={styles.content}>
+        <ProductImage
           accessibilityLabel={`Imagen de ${product.title}`}
           style={styles.image}
-          source={{
-            uri: product.thumbnail,
-            cache: FastImage.cacheControl.immutable,
-          }}
-          resizeMode={FastImage.resizeMode.contain}
+          uri={product.thumbnail}
+          onPress={() => onPress(product.id)}
+          actionLabel={`Abrir ${product.title}`}
         />
-        <View style={styles.info}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Ver detalle de ${product.title}`}
+          onPress={() => onPress(product.id)}
+          style={styles.info}
+        >
           <Text style={[styles.category, { color: colors.secondary }]}>
             {product.category.replace(/-/g, ' ')}
           </Text>
@@ -53,8 +51,8 @@ export const ProductCard = memo(function ProductCard({
             price={product.price}
             discountPercentage={product.discountPercentage}
           />
-        </View>
-      </Pressable>
+        </Pressable>
+      </View>
       <View style={styles.favorite}>
         <FavoriteButton product={product} />
       </View>
