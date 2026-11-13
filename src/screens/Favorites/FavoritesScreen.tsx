@@ -88,6 +88,7 @@ export function FavoritesScreen() {
       }
       ListEmptyComponent={
         <EmptyState
+          icon="heart"
           title="Tu selección empieza aquí"
           description="Guarda los productos que te gusten y los tendrás a mano, incluso sin conexión."
           actionLabel="Explorar productos"
@@ -100,14 +101,25 @@ export function FavoritesScreen() {
 
 const styles = StyleSheet.create({
   list: { flex: 1 },
-  content: { flexGrow: 1, padding: spacing.md },
-  header: { gap: spacing.sm, paddingBottom: spacing.lg },
-  title: { fontSize: 24, fontWeight: '700' },
+  content: { flexGrow: 1, padding: 20 },
+  header: {
+    gap: spacing.sm,
+    paddingBottom: spacing.lg,
+    maxWidth: 720,
+    width: '100%',
+    alignSelf: 'center',
+  },
+  title: {
+    fontSize: 24,
+    lineHeight: 30,
+    fontWeight: '600',
+    letterSpacing: -0.4,
+  },
   description: { fontSize: 14, lineHeight: 21 },
   deleteAction: {
     width: 112,
-    marginBottom: spacing.md,
-    borderRadius: 20,
+    marginBottom: 12,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },

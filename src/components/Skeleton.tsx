@@ -38,11 +38,19 @@ export function Skeleton({ detail = false }: { detail?: boolean }) {
             { backgroundColor: colors.surface },
           ]}
         >
-          <View style={[styles.image, { backgroundColor: colors.skeleton }]} />
-          <View style={[styles.line, { backgroundColor: colors.skeleton }]} />
           <View
-            style={[styles.shortLine, { backgroundColor: colors.skeleton }]}
+            style={[
+              styles.image,
+              detail && styles.detailImage,
+              { backgroundColor: colors.skeleton },
+            ]}
           />
+          <View style={styles.info}>
+            <View style={[styles.line, { backgroundColor: colors.skeleton }]} />
+            <View
+              style={[styles.shortLine, { backgroundColor: colors.skeleton }]}
+            />
+          </View>
         </View>
       ))}
     </Animated.View>
@@ -50,10 +58,23 @@ export function Skeleton({ detail = false }: { detail?: boolean }) {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16, gap: 16 },
-  card: { padding: 16, borderRadius: 20, gap: 12 },
-  detail: { minHeight: 400 },
-  image: { height: 120, borderRadius: 12 },
+  container: { gap: 12, width: '100%', maxWidth: 720, alignSelf: 'center' },
+  card: {
+    padding: 12,
+    borderRadius: 16,
+    gap: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  detail: {
+    minHeight: 400,
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    margin: 20,
+  },
+  image: { width: 112, height: 160, borderRadius: 10 },
+  detailImage: { width: '100%', height: 300 },
+  info: { flex: 1, gap: 16 },
   line: { height: 18, width: '80%', borderRadius: 6 },
   shortLine: { height: 16, width: '45%', borderRadius: 6 },
 });

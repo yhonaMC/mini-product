@@ -9,17 +9,26 @@ test('changes appearance from the accessible control and can restore it', () => 
       <ThemeToggle />
     </ThemeProvider>,
   );
-  const initialDark = screen.queryByText('Claro') !== null;
+  const initialDark =
+    screen.queryByRole('button', { name: 'Activar modo claro' }) !== null;
   fireEvent.press(
     screen.getByRole('button', {
       name: initialDark ? 'Activar modo claro' : 'Activar modo oscuro',
     }),
   );
-  expect(screen.getByText(initialDark ? 'Oscuro' : 'Claro')).toBeOnTheScreen();
+  expect(
+    screen.getByRole('button', {
+      name: initialDark ? 'Activar modo oscuro' : 'Activar modo claro',
+    }),
+  ).toBeOnTheScreen();
   fireEvent.press(
     screen.getByRole('button', {
       name: initialDark ? 'Activar modo oscuro' : 'Activar modo claro',
     }),
   );
-  expect(screen.getByText(initialDark ? 'Claro' : 'Oscuro')).toBeOnTheScreen();
+  expect(
+    screen.getByRole('button', {
+      name: initialDark ? 'Activar modo claro' : 'Activar modo oscuro',
+    }),
+  ).toBeOnTheScreen();
 });

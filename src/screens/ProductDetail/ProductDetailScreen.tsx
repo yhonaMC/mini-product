@@ -70,7 +70,7 @@ function ProductImages({ product }: { product: Product }) {
         ref={carousel}
         horizontal
         pagingEnabled
-        style={[styles.image, { backgroundColor: colors.surface }]}
+        style={[styles.image, { backgroundColor: colors.imageSurface }]}
         showsHorizontalScrollIndicator={false}
         data={images}
         extraData={imageWidth}
@@ -105,7 +105,7 @@ function ProductImages({ product }: { product: Product }) {
               uri={item}
               style={[
                 styles.image,
-                { width: imageWidth, backgroundColor: colors.surface },
+                { width: imageWidth, backgroundColor: colors.imageSurface },
               ]}
             />
           ) : null
@@ -125,7 +125,7 @@ function ProductImages({ product }: { product: Product }) {
               color: selectedIndex === 0 ? colors.secondary : colors.primary,
             }}
           >
-            ‹ Anterior
+            Anterior
           </Text>
         </Pressable>
         <Text
@@ -150,7 +150,7 @@ function ProductImages({ product }: { product: Product }) {
                   : colors.primary,
             }}
           >
-            Siguiente ›
+            Siguiente
           </Text>
         </Pressable>
       </View>
@@ -278,7 +278,7 @@ export function ProductDetailScreen({
               style={[
                 styles.tag,
                 {
-                  color: colors.primary,
+                  color: colors.secondary,
                   backgroundColor: colors.surface,
                   borderColor: colors.border,
                 },
@@ -295,9 +295,16 @@ export function ProductDetailScreen({
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  content: { padding: spacing.md, paddingBottom: spacing.xl, gap: spacing.md },
+  content: {
+    padding: 20,
+    paddingBottom: spacing.xl,
+    gap: spacing.md,
+    maxWidth: 760,
+    width: '100%',
+    alignSelf: 'center',
+  },
   gallery: { gap: spacing.xs },
-  image: { height: 300, borderRadius: 20 },
+  image: { height: 300, borderRadius: 16 },
   galleryControls: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -311,17 +318,22 @@ const styles = StyleSheet.create({
   },
   heading: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   titleBlock: { flex: 1, gap: spacing.xs },
-  brand: { fontSize: 14 },
-  title: { fontSize: 26, fontWeight: '800', lineHeight: 32 },
-  sectionTitle: { fontSize: 18, fontWeight: '700' },
-  description: { fontSize: 16, lineHeight: 25 },
+  brand: { fontSize: 13, lineHeight: 20 },
+  title: {
+    fontSize: 26,
+    fontWeight: '600',
+    lineHeight: 32,
+    letterSpacing: -0.5,
+  },
+  sectionTitle: { fontSize: 18, fontWeight: '600', marginTop: 12 },
+  description: { fontSize: 15, lineHeight: 24 },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   tag: {
     fontSize: 13,
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
     borderWidth: 1,
-    borderRadius: 16,
+    borderRadius: 6,
   },
   notice: {
     padding: spacing.md,

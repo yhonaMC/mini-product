@@ -2,12 +2,14 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { spacing } from '../theme/tokens';
+import { AppIcon, type IconName } from './AppIcon';
 
 interface Props {
   title: string;
   description: string;
   actionLabel?: string;
   onAction?: () => void;
+  icon?: IconName;
 }
 
 export function EmptyState({
@@ -15,16 +17,14 @@ export function EmptyState({
   description,
   actionLabel,
   onAction,
+  icon = 'bag',
 }: Props) {
   const { colors } = useTheme();
   return (
     <View style={styles.container}>
-      <Text
-        style={[styles.symbol, { color: colors.primary }]}
-        accessibilityElementsHidden
-      >
-        ◇
-      </Text>
+      <View style={[styles.symbol, { backgroundColor: colors.primarySoft }]}>
+        <AppIcon name={icon} color={colors.primary} size={32} />
+      </View>
       <Text
         accessibilityRole="header"
         style={[styles.title, { color: colors.text }]}
@@ -39,7 +39,10 @@ export function EmptyState({
           accessibilityRole="button"
           accessibilityLabel={actionLabel}
           onPress={onAction}
-          style={[styles.button, { backgroundColor: colors.primary }]}
+          style={({ pressed }) => [
+            styles.button,
+            { backgroundColor: colors.primary, opacity: pressed ? 0.75 : 1 },
+          ]}
         >
           <Text style={[styles.buttonLabel, { color: colors.onPrimary }]}>
             {actionLabel}
@@ -58,14 +61,32 @@ const styles = StyleSheet.create({
     padding: spacing.xl,
     gap: spacing.md,
   },
-  symbol: { fontSize: 54 },
-  title: { fontSize: 22, fontWeight: '700', textAlign: 'center' },
-  description: { fontSize: 16, lineHeight: 24, textAlign: 'center' },
+  symbol: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  title: {
+    fontSize: 22,
+    lineHeight: 28,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  description: {
+    fontSize: 15,
+    lineHeight: 23,
+    textAlign: 'center',
+    maxWidth: 320,
+  },
   button: {
     minHeight: 48,
     justifyContent: 'center',
     paddingHorizontal: spacing.lg,
     borderRadius: 12,
+    marginTop: spacing.sm,
   },
   buttonLabel: { fontSize: 16, fontWeight: '700' },
 });

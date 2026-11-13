@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useReducedMotion,
@@ -11,6 +11,7 @@ import Animated, {
 import type { Product } from '../domain/product';
 import { useFavoritesActions, useIsFavorite } from '../hooks/useFavorites';
 import { useTheme } from '../theme/ThemeProvider';
+import { AppIcon } from './AppIcon';
 
 export function FavoriteButton({
   product,
@@ -45,17 +46,17 @@ export function FavoriteButton({
         }
         toggleFavorite(product);
       }}
-      style={[styles.button, { backgroundColor: colors.surface }]}
+      style={({ pressed }) => [
+        styles.button,
+        { backgroundColor: colors.surface, opacity: pressed ? 0.6 : 1 },
+      ]}
     >
       <Animated.View style={animatedStyle}>
-        <Text
-          style={[
-            styles.heart,
-            { color: selected ? colors.danger : colors.secondary },
-          ]}
-        >
-          {selected ? '\u2665\uFE0E' : '♡'}
-        </Text>
+        <AppIcon
+          name={selected ? 'heart-filled' : 'heart'}
+          color={selected ? colors.danger : colors.secondary}
+          size={24}
+        />
       </Animated.View>
     </Pressable>
   );
@@ -63,11 +64,10 @@ export function FavoriteButton({
 
 const styles = StyleSheet.create({
   button: {
-    minWidth: 48,
-    minHeight: 48,
+    minWidth: 44,
+    minHeight: 44,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 24,
+    borderRadius: 22,
   },
-  heart: { fontSize: 30, lineHeight: 36 },
 });

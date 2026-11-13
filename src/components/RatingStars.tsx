@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
+import { AppIcon } from './AppIcon';
 
 const stars = [1, 2, 3, 4, 5];
 
@@ -13,9 +14,16 @@ export function RatingStars({ rating }: { rating: number }) {
       accessibilityLabel={`Calificación ${rating.toFixed(1)} de 5 estrellas`}
       style={styles.row}
     >
-      <Text style={[styles.stars, { color: colors.primary }]}>
-        {stars.map(star => (star <= Math.round(rating) ? '★' : '☆')).join('')}
-      </Text>
+      <View style={styles.stars}>
+        {stars.map(star => (
+          <AppIcon
+            key={star}
+            name={star <= Math.round(rating) ? 'star-filled' : 'star'}
+            color={colors.rating}
+            size={17}
+          />
+        ))}
+      </View>
       <Text style={{ color: colors.secondary }}>{rating.toFixed(1)} / 5</Text>
     </View>
   );
@@ -23,5 +31,5 @@ export function RatingStars({ rating }: { rating: number }) {
 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  stars: { fontSize: 20, letterSpacing: 2 },
+  stars: { flexDirection: 'row', gap: 2 },
 });

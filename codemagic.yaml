@@ -25,7 +25,7 @@ workflows:
           - '.'
         excludes:
           - '**/*.md'
-          - 'docs/**'
+          - 'assets/screenshots/**'
     scripts:
       - name: Install JavaScript dependencies
         script: npm ci

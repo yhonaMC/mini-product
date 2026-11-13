@@ -11,10 +11,7 @@ export function useOpenProduct() {
   return useCallback(
     (productId: number) => {
       selectProduct(productId);
-      navigation.navigate('Products', {
-        screen: 'ProductDetail',
-        params: { productId },
-      });
+      navigation.navigate('Detail');
     },
     [navigation, selectProduct],
   );

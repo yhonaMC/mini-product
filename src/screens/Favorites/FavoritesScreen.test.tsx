@@ -74,10 +74,7 @@ test('renders stored products offline and opens the selected product detail', ()
   fireEvent.press(
     screen.getByRole('button', { name: 'Ver detalle de Producto 17' }),
   );
-  expect(mockNavigate).toHaveBeenCalledWith('Products', {
-    screen: 'ProductDetail',
-    params: { productId: 17 },
-  });
+  expect(mockNavigate).toHaveBeenCalledWith('Detail');
   expect(useSelectionStore.getState().productId).toBe(17);
   expect(useFavoritesStore.getState().productsById['17']).toEqual(product);
 });

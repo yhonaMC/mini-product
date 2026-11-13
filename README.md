@@ -1,82 +1,40 @@
 # MiniTienda
 
-App iOS y Android de productos de [DummyJSON](https://dummyjson.com), con favoritos locales. React Native CLI **0.81.6**, New Architecture y TypeScript estricto, sin Expo.
+Catálogo de productos con búsqueda, categorías y favoritos locales. Hecho con React Native CLI 0.81.6 y TypeScript.
 
-Implementación y validación técnica completas: lint, formato, TypeScript y **114 tests en 17 suites** aprobados, también desde un clon público limpio. Android se comprobó manualmente y con APK autónomo sin conexión; iOS compiló y arrancó en Codemagic. Dos revisores independientes contrastaron requisitos y código, y sus hallazgos quedaron corregidos. El [registro de validación](docs/VALIDATION.md) detalla ejecuciones y alcance.
+## Requisitos
 
-## Funcionalidad
+| Herramienta                  | Versión                                                                              |
+| ---------------------------- | ------------------------------------------------------------------------------------ |
+| Node                         | 22 LTS, indicada en `.nvmrc`                                                         |
+| React Native / Community CLI | 0.81.6 / 20.0.0, instalados en el proyecto                                           |
+| Java                         | JDK 17                                                                               |
+| Android                      | SDK 36, Build Tools 36.0.0, NDK 27.1.12297006, CMake 3.22.1                          |
+| iOS                          | macOS, Xcode 16.4 y simulador instalado                                              |
+| Ruby / CocoaPods             | Probado con Ruby 3.3.6, Bundler 2.6.9 y CocoaPods 1.15.2; restricciones en `Gemfile` |
 
-- **Productos:** `FlatList` con imagen, título, precio original y descuento; páginas de 20 productos mediante `limit`/`skip`, scroll infinito y botón accesible para cargar más. Búsqueda con debounce de **300 ms** y categorías cargadas desde la API. Escribir una búsqueda limpia la categoría; elegir una categoría limpia la búsqueda. Carga inicial, lista vacía y errores de carga/paginación tienen mensajes y reintento.
-- **Detalle:** GET independiente por producto, carrusel con controles anterior/siguiente, descripción, precio con descuento, rating y etiquetas. Un favorito local sirve como información inicial y respaldo si falla la actualización; el fallo sigue visible y permite reintentar. Sin selección, la pestaña invita a elegir un producto.
-- **Favoritos:** lista exclusivamente local, sin consultar la API. MMKV conserva el objeto `Product` completo, incluidas descripción, imágenes, reviews y metadatos; no guarda solo IDs. Los cambios se reflejan inmediatamente entre pantallas. Se elimina deslizando a la izquierda o con el botón accesible de favorito; el estado vacío permite volver al catálogo.
-- **Navegación:** tres Bottom Tabs —Productos, Detalle y Favoritos— y un Stack tipado dentro de Productos. Abrir un producto desde catálogo o favoritos actualiza la selección de Detalle y abre el detalle del Stack, conservando la navegación hacia atrás.
-- **Experiencia:** skeletons, tema claro/oscuro con modo inicial del sistema, controles con roles, labels y estados accesibles, y animación del favorito con Reanimated 3 que respeta movimiento reducido. Un Error Boundary global permite recuperar errores de renderizado.
+Android requiere configurar `JAVA_HOME`, `ANDROID_HOME` y añadir `platform-tools` al `PATH`. La versión mínima es Android 7 (API 24). Las dependencias están fijadas en `package-lock.json`.
 
-## Capturas de la app
+## Ejecutar en Android
 
-Capturas reales del emulador durante la validación manual. La imagen sin conexión muestra favoritos persistidos; la del catálogo muestra un error de red recuperable.
+Arrancar un emulador desde Android Studio o conectar un dispositivo con depuración USB. Comprobar que aparece en `adb devices`.
 
-<img src="docs/screenshots/android-products.png" alt="Catálogo Android con búsqueda, categorías y precios" width="220" /> <img src="docs/screenshots/android-detail-final.png" alt="Detalle Android con carrusel y botón de favorito" width="220" /> <img src="docs/screenshots/android-favorites.png" alt="Lista de favoritos locales en Android" width="220" />
-
-<img src="docs/screenshots/android-favorites-offline-dark.png" alt="Favoritos locales sin conexión en modo oscuro" width="220" /> <img src="docs/screenshots/android-network-error.png" alt="Error de red del catálogo con opción de reintento" width="220" />
-
-<img src="docs/screenshots/android-demo.gif" alt="Demo Android: cambiar de imagen en el carrusel, guardar el producto y verlo en Favoritos" width="220" />
-
-El GIF muestra un producto con tres imágenes: se avanza de la primera a la segunda, se guarda como favorito y se abre la lista con dos productos guardados. El carrusel también se comprobó al girar y volver a vertical, conservando imagen y contador.
-
-<img src="docs/screenshots/ios-products.png" alt="Catálogo iOS arrancado en simulador por Codemagic" width="220" />
-
-Captura del [build iOS final #5](https://codemagic.io/app/6af632ef1de9516df029eb63/build/6af663ec42b11f1130861718): Release sin firma, bundle incluido, arranque y proceso vivo tras 20 segundos. La interacción manual se verificó en Android; en iOS se validaron compilación, arranque y captura.
-
-## Entorno y versiones
-
-| Herramienta o dependencia                    | Versión                                                                    |
-| -------------------------------------------- | -------------------------------------------------------------------------- |
-| Node                                         | 22 LTS (`.nvmrc`); mínimo 20.19.4                                          |
-| React Native / Community CLI local           | 0.81.6 / 20.0.0                                                            |
-| React / react-test-renderer                  | 19.1.4 / 19.1.4                                                            |
-| TypeScript                                   | 5.9.3, `strict: true`                                                      |
-| Java                                         | JDK 17                                                                     |
-| Android                                      | SDK 36, Build Tools 36.0.0, NDK 27.1.12297006, CMake 3.22.1; mínimo API 24 |
-| React Navigation                             | native 7.5.1; bottom-tabs/native-stack 7.21.0                              |
-| Native screens / Safe Area / Gesture Handler | 4.24.0 / 5.6.2 / 2.33.1                                                    |
-| Estado y persistencia                        | TanStack Query 5.107.1, Zustand 5.1.0, MMKV 3.3.3                          |
-| Animación e imágenes                         | Reanimated 3.19.5, FastImage 8.13.0                                        |
-| Tests y formato                              | Jest 29.7.0, RNTL 13.3.3, ESLint 8.57.1, Prettier 2.8.8                    |
-
-Las dependencias exactas están fijadas en `package-lock.json`; usar `npm ci`. En Windows se validó con Node 26.13.0 y JDK 17.0.21. CI usa Node 22. El build iOS aprobado registró **Node 22.23.5, Ruby 3.3.6, Bundler 2.6.9, CocoaPods 1.15.2 y Xcode 16.4 (16F6)**. Cada ejecución publica sus versiones en `ios-tool-versions.txt`; `Gemfile` conserva las restricciones de Ruby/CocoaPods.
-
-## Android desde Windows
-
-Instalar Node 22, JDK 17, Android Studio y los componentes Android de la tabla. Configurar `JAVA_HOME` y `ANDROID_HOME`, y añadir `platform-tools` al `PATH`. Arrancar un emulador o conectar un teléfono con depuración USB; comprobarlo con `adb devices`. El emulador requiere virtualización y aceleración habilitadas. En la máquina de validación se usó Windows Hypervisor Platform y el AVD `Pixel_API_36`, con rutas largas habilitadas.
-
-Desde la raíz, instalar dependencias e iniciar Metro:
-
-```powershell
+```sh
 npm ci
 npm start
 ```
 
-En otra terminal, también desde la raíz:
+En otra terminal, desde la raíz:
 
-```powershell
+```sh
 npm run android
 ```
 
-Para compilar sin instalar en un dispositivo:
+Para compilar sin instalar, ejecutar `./gradlew assembleDebug --max-workers=2` dentro de `android/` (`.\gradlew.bat` en Windows). El APK queda en `android/app/build/outputs/apk/debug/`. La versión debug necesita Metro.
 
-```powershell
-cd android
-.\gradlew.bat assembleDebug --max-workers=2
-```
+## Ejecutar en iOS
 
-El APK se genera en `android/app/build/outputs/apk/debug/app-debug.apk`. Para compilar solo el ABI del emulador local, añadir `-PreactNativeArchitectures=x86_64`. GitHub Actions compila todos los ABI configurados. **El APK debug necesita Metro**, también al arrancar para comprobar favoritos offline: debe conservar acceso al servidor JavaScript aunque la API no esté disponible.
-
-Se verificó además un APK autónomo del emulador: `assembleRelease -PreactNativeArchitectures=x86_64 --max-workers=2`. Incluye JavaScript y usa la firma de desarrollo de la plantilla para esta prueba local. Con Metro cerrado y modo avión, la app arrancó y restauró los dos favoritos completos desde MMKV. [Captura del arranque sin red](docs/screenshots/android-release-offline.png).
-
-## iOS desde macOS
-
-Usar Node 22, Xcode 16.4 con Command Line Tools y un simulador iPhone instalado. El entorno validado usa Ruby 3.3.6 y Bundler 2.6.9; instalar las dependencias Ruby mediante `Gemfile` para respetar sus restricciones. Desde la raíz:
+Desde macOS:
 
 ```sh
 npm ci
@@ -85,23 +43,11 @@ bundle exec pod install --project-directory=ios
 npm start
 ```
 
-En otra terminal, ejecutar `npm run ios`. También se puede abrir `ios/MiniTienda.xcworkspace` en Xcode y elegir un simulador. El desarrollo local usa Metro; un dispositivo físico requiere configurar su firma.
+En otra terminal, ejecutar `npm run ios`, o abrir `ios/MiniTienda.xcworkspace` en Xcode y seleccionar un simulador. Para un dispositivo físico hay que configurar la firma.
 
-## iOS desde Windows con Codemagic
-
-El repositorio ya tiene un webhook activo para pushes a `main`. El workflow `ios-simulator` de [codemagic.yaml](codemagic.yaml) también puede iniciarse desde [Codemagic](https://codemagic.io/apps). Para usar un fork, conectarlo a una cuenta propia y configurar el workflow y su webhook.
-
-La máquina macOS M2 con Xcode 16.4 instala dependencias, ejecuta calidad/tests y compila **Release de simulador sin firma**, con bundle JavaScript incluido. Selecciona un iPhone disponible por UDID, espera su arranque, instala la app y comprueba que el proceso sigue vivo tras **20 segundos** antes de capturar. No necesita Metro ni cuenta de Apple Developer; el `.app` es para simulador.
-
-El workflow publica `MiniTienda.app`, `ios-simulator.zip`, `ios-home.png`, logs de compilación/arranque/proceso e `ios-tool-versions.txt`. El [build final #5](https://codemagic.io/app/6af632ef1de9516df029eb63/build/6af663ec42b11f1130861718) aprobó Release, Swift/ObjC++, smoke test y captura inspeccionada del catálogo, cerrando G4. **La interacción manual se realizó en Android; en iOS se validaron compilación, arranque y captura.**
-
-Para ahorrar minutos macOS, `when.changeset` excluye cambios limitados a `**/*.md` y `docs/**`. Según la [documentación de Codemagic](https://docs.codemagic.io/yaml-running-builds/starting-builds-automatically/), la primera ejecución tras configurar este filtro corre completa; las siguientes pueden omitir el trabajo según los cambios desde el último build exitoso. Modificar `codemagic.yaml` también fuerza una ejecución. El filtro se evalúa tras obtener las fuentes, por lo que puede aparecer una ejecución marcada como omitida.
-
-No se activó App Preview ni facturación. Los minutos disponibles se consultan en la propia cuenta antes de ejecutar builds; no se presupone una cuota gratuita. GitHub Actions mantiene calidad y compilación Android en cada push y pull request, incluidos los cambios de documentación.
+El workflow de `codemagic.yaml` permite compilar desde Windows usando una máquina macOS remota. Genera una app Release de simulador sin firma y con JavaScript incluido, comprueba su arranque y publica una captura y los logs. Para utilizarlo en un fork hay que conectar el repositorio a una cuenta propia de Codemagic. Ese control comprueba compilación y arranque; no sustituye una prueba interactiva en iOS.
 
 ## Tests y calidad
-
-Desde la raíz:
 
 ```sh
 npm run lint
@@ -110,51 +56,27 @@ npm run typecheck
 npm test -- --ci --runInBand
 ```
 
-Para ejecutar una integración concreta:
+Jest y React Native Testing Library cubren peticiones y cancelación, hooks, debounce, paginación, descuentos, persistencia, errores y la interacción de las tres pantallas. Las pruebas de navegación usan los navegadores reales para comprobar la pestaña activa y el reinicio del detalle. Las dependencias nativas y la red se simulan en los tests.
 
-```sh
-npm test -- --runInBand src/screens/Favorites/FavoritesScreen.test.tsx
-```
+GitHub Actions ejecuta estas comprobaciones y compila Android en cada push y pull request. Codemagic se encarga de la compilación y del arranque en simulador iOS.
 
-La última puerta global aprobó **114 tests en 17 suites**. Se prueban HTTP y cancelación/timeout, endpoints, precios, debounce, filtros y paginación, detalle con respaldo local, persistencia y fallos de MMKV, reactividad entre consumidores, módulo nativo, errores/reintento de imágenes, medición/realineación del carrusel y render/interacción de pantallas. Se simulan fronteras como `fetch`, MMKV y componentes nativos; los hooks y stores se ejercitan con su lógica real. Esta cifra cuenta pruebas, no representa un porcentaje de cobertura de código.
+## Decisiones técnicas
 
-`lint` revisa `src/` y trata warnings como fallos. Están activas `@typescript-eslint/no-explicit-any`, `react-hooks/rules-of-hooks` y `react-hooks/exhaustive-deps`. `lint:format` revisa código y documentación según `.prettierignore`; `npm run format` aplica formato. Los builds y el recorrido manual complementan Jest.
+- **Capas:** `api` contiene el cliente HTTP y los endpoints; `domain`, los tipos; `hooks`, las consultas y acciones; `store` y `storage`, los favoritos. Las pantallas se encargan de la presentación y consumen hooks.
+- **Zustand + TanStack Query:** separan el estado local del estado del servidor. Los favoritos son globales y reactivos; Query gestiona caché, paginación y cancelación. La búsqueda espera 300 ms y se excluye mutuamente con la categoría.
+- **Fetch:** un cliente central configura URL base y timeout en `src/api/config.ts`. Distingue fallos de red, HTTP y timeout, y conecta el `AbortSignal` de Query con `AbortController`.
+- **MMKV:** permite guardar favoritos de forma síncrona sin un backend. Se persiste el producto completo, no solo su ID, para mostrarlo sin red. El formato se valida al leerlo y los errores de almacenamiento se muestran con opción de reintento.
+- **Navegación:** React Navigation v7, tres Bottom Tabs y un Stack anidado en Productos, con parámetros tipados. Tocar un producto desde el catálogo o Favoritos selecciona la pestaña Detalle. Al salir de ella se limpia la selección; volver a entrar muestra «Elige un producto» hasta abrir otro. Los favoritos y la caché de productos se conservan.
+- **Imágenes y listas:** FastImage usa caché nativa para las URLs de DummyJSON. `ProductCard` usa `memo` y un callback estable para evitar renderizar filas sin cambios; la lista usa IDs como claves y elimina duplicados entre páginas.
+- **Interacción:** Reanimated 3 anima el favorito de Detalle respetando movimiento reducido. Favoritos permite eliminar por swipe o mediante un botón accesible. Los colores de las pantallas, navegación y controles se adaptan al tema claro y oscuro.
+- **Módulo nativo:** `CurrencyFormatter` expone Kotlin (`NumberFormat`) y Swift (`NumberFormatter`) mediante un TurboModule y un adaptador ObjC++. JavaScript lo utiliza para los precios; `Intl.NumberFormat` sirve de respaldo cuando el módulo no está disponible. Los importes son USD, sin conversión de moneda.
 
-## Arquitectura y decisiones
+## Comportamiento sin conexión
 
-| Capa                     | Responsabilidad                                              |
-| ------------------------ | ------------------------------------------------------------ |
-| `domain`                 | Producto completo, categorías, páginas y filtro discriminado |
-| `api`                    | Cliente HTTP y endpoints, sin dependencias de UI             |
-| `hooks`                  | Consultas, debounce, filtros y acceso a favoritos            |
-| `store` / `storage`      | Favoritos globales y adaptador MMKV                          |
-| `screens` / `components` | Pantallas y piezas visuales reutilizables                    |
-| `navigation` / `theme`   | Rutas tipadas, selección del detalle y tokens de color       |
-| `utils` / `native`       | Cálculo de precios y puente al formato monetario nativo      |
+Favoritos lee exclusivamente MMKV y conserva sus datos al cerrar la app. Abrir su detalle intenta actualizarlo por API; si falla, mantiene la información guardada y muestra un aviso con reintento. Las imágenes dependen de la caché del dispositivo y pueden no estar disponibles. El catálogo no se persiste para uso offline.
 
-**fetch centralizado** evita otra dependencia HTTP y permite configurar URL base y timeout en `src/api/config.ts` o inyectarlos en `createHttpClient`. La configuración actual es DummyJSON y 12 segundos. El cliente distingue errores HTTP, de conectividad y timeout, y consume `AbortSignal` de React Query. Cancelar una consulta no se presenta como fallo de conexión. Las pantallas consumen la API a través de hooks.
+Para comprobarlo: guardar un producto, reiniciar la app, abrir Favoritos sin conexión y después abrir su detalle. En debug, Metro debe seguir siendo accesible aunque no lo sea la API. Para probar un arranque completamente autónomo, compilar `assembleRelease`; esta prueba utiliza la firma de desarrollo de la plantilla.
 
-**TanStack Query y Zustand** separan datos del servidor y estado local. Query gestiona caché de sesión, cancelación y páginas por filtro; el siguiente `skip` se calcula con la respuesta y la lista elimina duplicados. Zustand mantiene favoritos globales con selectores estables para React 19/Zustand 5. `ProductCard` está memoizado y comparte un callback de navegación estable para evitar trabajo en filas sin cambios.
+## Capturas
 
-**MMKV 3.3.3** aporta persistencia local síncrona compatible con New Architecture sin incorporar Nitro Modules de v4. Zustand `persist` guarda solo el mapa de productos completos en un esquema versionado. La lectura valida el contenido; fallos de inicialización, lectura, corrupción o escritura se muestran mediante `storageError` y un aviso global con reintento. Un fallo de lectura conserva los datos guardados; al recuperarse se fusionan adiciones y eliminaciones de la sesión. Si falla una escritura, los cambios siguen reactivos en memoria, pero pueden perderse al cerrar la app hasta que se guarden correctamente.
-
-**FastImage 8.13.0** utiliza caché nativa Glide/SDWebImage con política `immutable` para las URLs estables de DummyJSON. `ProductImage` muestra un aviso y un botón accesible para reintentar si falla una imagen. La caché puede ser desalojada y no garantiza todas las imágenes sin conexión. Los objetos y URLs de favoritos permanecen en MMKV; la caché del catálogo es de sesión y no se persiste como un catálogo offline.
-
-**React Navigation v7 y Reanimated 3.19.5** cumplen las versiones mayores requeridas. `react-native-screens` 4.24.0 y Safe Area 5.6.2 se mantienen en las versiones integradas con RN 0.81. El favorito de Detalle usa `useSharedValue`, `useAnimatedStyle`, `withTiming` y `withSpring`; el swipe usa `ReanimatedSwipeable`. El plugin Babel de Reanimated está al final.
-
-**CurrencyFormatter** es un TurboModule con spec Codegen, Kotlin (`NumberFormat`), Swift (`NumberFormatter`) y adaptador ObjC++. `formatPrice` delega en el módulo registrado; `Intl.NumberFormat` es el respaldo cuando no existe, por ejemplo en tests. Un error del módulo registrado se propaga para hacer visible un defecto nativo. DummyJSON se presenta en USD, sin conversión de divisas; el formato puede variar ligeramente entre plataformas.
-
-**CI** reparte responsabilidades: [GitHub Actions](.github/workflows/ci.yml) valida lint, formato, tipos, Jest y APK Android; Codemagic compila y comprueba el arranque iOS desde Windows. La compilación automatizada no sustituye la interacción manual ni la revisión independiente.
-
-## Recorrido manual y comportamiento sin conexión
-
-1. Abrir Productos, llegar al final para cargar otra página y buscar un término; la consulta espera 300 ms desde el último cambio.
-2. Elegir una categoría y comprobar que la búsqueda se limpia. Volver a escribir y comprobar que se limpia la categoría.
-3. Abrir un producto, recorrer imágenes y añadirlo a favoritos. Volver al catálogo: el indicador cambia inmediatamente. La pestaña Detalle conserva la selección.
-4. Abrir Favoritos y eliminar un producto mediante botón o swipe; al quitar el último aparece el estado vacío con acceso al catálogo.
-5. Guardar otro favorito, reiniciar y comprobar persistencia. Cambiar a modo oscuro y cortar la conexión de la API: Favoritos sigue mostrando los datos locales.
-6. Sin conexión, realizar una búsqueda nueva: aparece un error con reintento. El detalle de un favorito intenta actualizarse y conserva la última información con un aviso. Un producto sin dato guardado ni caché puede mostrar solo el error. Restaurar la conexión y reintentar.
-
-Este recorrido se completó manualmente en Android durante Fase 2. Es normal que una consulta cacheada aún muestre datos al perder la red, que una imagen no cacheada no esté disponible y que la API falle sin conexión. Los errores de almacenamiento se muestran por separado. El arranque autónomo offline con APK Release también se verificó en Fase 3.
-
-El [plan](PLAN.md), los [contratos](docs/CONTRACTS.md), los [contratos de pantallas](docs/PHASE2_CONTRACTS.md) y la [revisión inicial](docs/REQUIREMENTS_REVIEW.md) documentan el alcance. La [revisión final de requisitos](docs/FINAL_REQUIREMENTS_REVIEW.md), la [revisión de código](docs/FINAL_CODE_REVIEW.md) y el [registro de validación](docs/VALIDATION.md) cierran las puertas técnicas G1–G6 sobre el commit de aplicación `ae65484`. Las actualizaciones posteriores de evidencias son documentales.
+<img src="assets/screenshots/products.png" alt="Catálogo con búsqueda, categorías y precios" width="220" /> <img src="assets/screenshots/detail.png" alt="Detalle con imágenes y favorito" width="220" /> <img src="assets/screenshots/favorites.png" alt="Productos guardados en favoritos" width="220" />

@@ -11,6 +11,7 @@ interface Props {
   style?: StyleProp<ViewStyle>;
   onPress?: () => void;
   actionLabel?: string;
+  compact?: boolean;
 }
 
 export function ProductImage(props: Props) {
@@ -24,6 +25,7 @@ function RetryableImage({
   style,
   onPress,
   actionLabel,
+  compact = false,
 }: Props) {
   const { colors } = useTheme();
   const [failed, setFailed] = useState(false);
@@ -46,7 +48,7 @@ function RetryableImage({
       style={[styles.container, { backgroundColor: colors.surface }, style]}
     >
       {failed ? (
-        <View style={styles.error}>
+        <View style={[styles.error, compact && styles.compactError]}>
           <Text
             accessibilityRole="alert"
             accessibilityLiveRegion="polite"
@@ -62,7 +64,11 @@ function RetryableImage({
               setAttempt(current => current + 1);
               setFailed(false);
             }}
-            style={[styles.retry, { backgroundColor: colors.primary }]}
+            style={[
+              styles.retry,
+              compact && styles.compactRetry,
+              { backgroundColor: colors.primary },
+            ]}
           >
             <Text style={[styles.retryLabel, { color: colors.onPrimary }]}>
               Reintentar imagen
@@ -95,6 +101,8 @@ const styles = StyleSheet.create({
     gap: spacing.sm,
   },
   message: { textAlign: 'center', fontSize: 14 },
+  compactError: { padding: 8, gap: 8 },
+  compactRetry: { paddingHorizontal: 6, alignSelf: 'stretch' },
   retry: {
     minHeight: 44,
     justifyContent: 'center',

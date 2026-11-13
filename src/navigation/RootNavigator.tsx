@@ -1,14 +1,20 @@
-import React, { useMemo } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import React, { useCallback, useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
+import {
+  DefaultTheme,
+  NavigationContainer,
+  useFocusEffect,
+} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ProductsScreen } from '../screens/Products/ProductsScreen';
 import { ProductDetailScreen } from '../screens/ProductDetail/ProductDetailScreen';
 import { FavoritesScreen } from '../screens/Favorites/FavoritesScreen';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { StorageNotice } from '../components/StorageNotice';
+import { AppIcon } from '../components/AppIcon';
 import { useTheme } from '../theme/ThemeProvider';
 import { useFavorites } from '../hooks/useFavorites';
 import { useSelectionStore } from './selectionStore';
@@ -29,6 +35,8 @@ function StackProductDetail({
 
 function SelectedProductDetail() {
   const productId = useSelectionStore(state => state.productId);
+  const clearSelection = useSelectionStore(state => state.clearSelection);
+  useFocusEffect(useCallback(() => clearSelection, [clearSelection]));
   return <ProductDetailScreen productId={productId} />;
 }
 
@@ -39,6 +47,8 @@ function ProductsNavigator() {
       screenOptions={{
         headerStyle: { backgroundColor: colors.surface },
         headerTintColor: colors.text,
+        headerShadowVisible: false,
+        headerTitleStyle: { fontSize: 18, fontWeight: '600' },
         headerRight: renderThemeToggle,
         contentStyle: { backgroundColor: colors.background },
       }}
@@ -66,16 +76,14 @@ function TabSymbol({
   color: string;
   size: number;
 }) {
-  const symbol =
-    name === 'Products' ? '▦' : name === 'Detail' ? '◇' : '\u2665\uFE0E';
   return (
-    <Text
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
-      style={{ color, fontSize: size }}
-    >
-      {symbol}
-    </Text>
+    <AppIcon
+      name={
+        name === 'Products' ? 'grid' : name === 'Detail' ? 'detail' : 'heart'
+      }
+      color={color}
+      size={size}
+    />
   );
 }
 
@@ -92,6 +100,7 @@ const tabIcons = {
 };
 
 export function RootNavigator() {
+  const insets = useSafeAreaInsets();
   const { colors, isDark } = useTheme();
   const { favorites } = useFavorites();
   // Keep NavigationContainer's theme reference stable when only favorites change.
@@ -119,13 +128,21 @@ export function RootNavigator() {
         <Tabs.Navigator
           screenOptions={({ route }) => ({
             headerRight: renderThemeToggle,
+            headerRightContainerStyle: { paddingRight: 16 },
             headerTintColor: colors.text,
             headerStyle: { backgroundColor: colors.surface },
+            headerShadowVisible: false,
+            headerTitleStyle: { fontSize: 18, fontWeight: '600' },
+            tabBarLabelStyle: { fontSize: 11, fontWeight: '600', marginTop: 4 },
             tabBarActiveTintColor: colors.primary,
             tabBarInactiveTintColor: colors.secondary,
             tabBarStyle: {
               backgroundColor: colors.surface,
               borderTopColor: colors.border,
+              paddingTop: 8,
+              height: 64 + insets.bottom,
+              paddingBottom: Math.max(insets.bottom, 8),
+              elevation: 0,
             },
             tabBarBadgeStyle: {
               backgroundColor: colors.primary,

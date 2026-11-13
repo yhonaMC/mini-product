@@ -26,8 +26,9 @@ export const ProductCard = memo(function ProductCard({
     >
       <View style={styles.content}>
         <ProductImage
+          compact
           accessibilityLabel={`Imagen de ${product.title}`}
-          style={styles.image}
+          style={[styles.image, { backgroundColor: colors.imageSurface }]}
           uri={product.thumbnail}
           onPress={() => onPress(product.id)}
           actionLabel={`Abrir ${product.title}`}
@@ -36,7 +37,7 @@ export const ProductCard = memo(function ProductCard({
           accessibilityRole="button"
           accessibilityLabel={`Ver detalle de ${product.title}`}
           onPress={() => onPress(product.id)}
-          style={styles.info}
+          style={({ pressed }) => [styles.info, { opacity: pressed ? 0.6 : 1 }]}
         >
           <Text style={[styles.category, { color: colors.secondary }]}>
             {product.category.replace(/-/g, ' ')}
@@ -50,6 +51,7 @@ export const ProductCard = memo(function ProductCard({
           <PriceTag
             price={product.price}
             discountPercentage={product.discountPercentage}
+            compact
           />
         </Pressable>
       </View>
@@ -63,14 +65,17 @@ export const ProductCard = memo(function ProductCard({
 const styles = StyleSheet.create({
   card: {
     borderWidth: 1,
-    borderRadius: 20,
+    borderRadius: 16,
     overflow: 'hidden',
-    marginBottom: 16,
+    marginBottom: 12,
+    width: '100%',
+    maxWidth: 720,
+    alignSelf: 'center',
   },
-  content: { padding: 16, gap: 12 },
-  image: { width: '100%', height: 180 },
-  info: { gap: 8 },
-  category: { fontSize: 12, textTransform: 'capitalize' },
-  title: { fontSize: 18, fontWeight: '700', paddingRight: 32 },
-  favorite: { position: 'absolute', top: 12, right: 12 },
+  content: { padding: 12, gap: 16, flexDirection: 'row', alignItems: 'center' },
+  image: { width: 112, height: 160, borderRadius: 10 },
+  info: { flex: 1, minWidth: 0, gap: 8, paddingVertical: 4 },
+  category: { fontSize: 12, textTransform: 'capitalize', lineHeight: 18 },
+  title: { fontSize: 16, lineHeight: 22, fontWeight: '600' },
+  favorite: { position: 'absolute', top: 16, left: 16 },
 });

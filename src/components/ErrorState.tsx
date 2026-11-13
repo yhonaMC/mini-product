@@ -18,6 +18,7 @@ export function ErrorState({
       description={message}
       actionLabel="Reintentar"
       onAction={onRetry}
+      icon="warning"
     />
   );
 }
