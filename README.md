@@ -2,7 +2,7 @@
 
 App iOS y Android de productos de [DummyJSON](https://dummyjson.com), con favoritos locales. React Native CLI **0.81.6**, New Architecture y TypeScript estricto, sin Expo.
 
-El catálogo, detalle y favoritos están implementados. La validación de integración aprobó lint, formato, tipos, **114 tests en 17 suites** y el recorrido manual Android. El build iOS final de las pantallas funcionales y la comprobación desde un clon limpio siguen pendientes. Los dos revisores independientes contrastaron requisitos y código; su hallazgo sobre rotación se corrigió con regresiones. El [registro de validación](docs/VALIDATION.md) distingue cada ejecución y su alcance.
+Implementación y validación técnica completas: lint, formato, TypeScript y **114 tests en 17 suites** aprobados, también desde un clon público limpio. Android se comprobó manualmente y con APK autónomo sin conexión; iOS compiló y arrancó en Codemagic. Dos revisores independientes contrastaron requisitos y código, y sus hallazgos quedaron corregidos. El [registro de validación](docs/VALIDATION.md) detalla ejecuciones y alcance.
 
 ## Funcionalidad
 
@@ -12,7 +12,7 @@ El catálogo, detalle y favoritos están implementados. La validación de integr
 - **Navegación:** tres Bottom Tabs —Productos, Detalle y Favoritos— y un Stack tipado dentro de Productos. Abrir un producto desde catálogo o favoritos actualiza la selección de Detalle y abre el detalle del Stack, conservando la navegación hacia atrás.
 - **Experiencia:** skeletons, tema claro/oscuro con modo inicial del sistema, controles con roles, labels y estados accesibles, y animación del favorito con Reanimated 3 que respeta movimiento reducido. Un Error Boundary global permite recuperar errores de renderizado.
 
-## Capturas Android
+## Capturas de la app
 
 Capturas reales del emulador durante la validación manual. La imagen sin conexión muestra favoritos persistidos; la del catálogo muestra un error de red recuperable.
 
@@ -22,7 +22,11 @@ Capturas reales del emulador durante la validación manual. La imagen sin conexi
 
 <img src="docs/screenshots/android-demo.gif" alt="Demo Android: cambiar de imagen en el carrusel, guardar el producto y verlo en Favoritos" width="220" />
 
-El GIF muestra un producto con tres imágenes: se avanza de la primera a la segunda, se guarda como favorito y se abre la lista con dos productos guardados. La captura iOS de la versión funcional está pendiente. Las evidencias anteriores de iOS corresponden a los cimientos, sin acreditar interacción de las pantallas finales.
+El GIF muestra un producto con tres imágenes: se avanza de la primera a la segunda, se guarda como favorito y se abre la lista con dos productos guardados. El carrusel también se comprobó al girar y volver a vertical, conservando imagen y contador.
+
+<img src="docs/screenshots/ios-products.png" alt="Catálogo iOS arrancado en simulador por Codemagic" width="220" />
+
+Captura del [build iOS final #5](https://codemagic.io/app/6af632ef1de9516df029eb63/build/6af663ec42b11f1130861718): Release sin firma, bundle incluido, arranque y proceso vivo tras 20 segundos. La interacción manual se verificó en Android; en iOS se validaron compilación, arranque y captura.
 
 ## Entorno y versiones
 
@@ -89,7 +93,7 @@ El repositorio ya tiene un webhook activo para pushes a `main`. El workflow `ios
 
 La máquina macOS M2 con Xcode 16.4 instala dependencias, ejecuta calidad/tests y compila **Release de simulador sin firma**, con bundle JavaScript incluido. Selecciona un iPhone disponible por UDID, espera su arranque, instala la app y comprueba que el proceso sigue vivo tras **20 segundos** antes de capturar. No necesita Metro ni cuenta de Apple Developer; el `.app` es para simulador.
 
-El workflow publica `MiniTienda.app`, `ios-simulator.zip`, `ios-home.png`, logs de compilación/arranque/proceso e `ios-tool-versions.txt`. El [build #3 de los cimientos](https://codemagic.io/app/6af632ef1de9516df029eb63/build/6af64acceee0ba94dc935c1a) aprobó la compilación del módulo Swift y adaptador ObjC++ y el smoke test; su captura fue inspeccionada. **No se ha realizado interacción manual en iOS** ni se acredita todavía el G4 final.
+El workflow publica `MiniTienda.app`, `ios-simulator.zip`, `ios-home.png`, logs de compilación/arranque/proceso e `ios-tool-versions.txt`. El [build final #5](https://codemagic.io/app/6af632ef1de9516df029eb63/build/6af663ec42b11f1130861718) aprobó Release, Swift/ObjC++, smoke test y captura inspeccionada del catálogo, cerrando G4. **La interacción manual se realizó en Android; en iOS se validaron compilación, arranque y captura.**
 
 Para ahorrar minutos macOS, `when.changeset` excluye cambios limitados a `**/*.md` y `docs/**`. Según la [documentación de Codemagic](https://docs.codemagic.io/yaml-running-builds/starting-builds-automatically/), la primera ejecución tras configurar este filtro corre completa; las siguientes pueden omitir el trabajo según los cambios desde el último build exitoso. Modificar `codemagic.yaml` también fuerza una ejecución. El filtro se evalúa tras obtener las fuentes, por lo que puede aparecer una ejecución marcada como omitida.
 
@@ -153,4 +157,4 @@ La última puerta global aprobó **114 tests en 17 suites**. Se prueban HTTP y c
 
 Este recorrido se completó manualmente en Android durante Fase 2. Es normal que una consulta cacheada aún muestre datos al perder la red, que una imagen no cacheada no esté disponible y que la API falle sin conexión. Los errores de almacenamiento se muestran por separado. El arranque autónomo offline con APK Release también se verificó en Fase 3.
 
-El [plan](PLAN.md), los [contratos](docs/CONTRACTS.md), los [contratos de pantallas](docs/PHASE2_CONTRACTS.md) y la [revisión de requisitos](docs/REQUIREMENTS_REVIEW.md) documentan el alcance. Faltan el G4 final de iOS, la revisión independiente G5 y la comprobación G6 desde un clon limpio antes de declarar la entrega cerrada.
+El [plan](PLAN.md), los [contratos](docs/CONTRACTS.md), los [contratos de pantallas](docs/PHASE2_CONTRACTS.md) y la [revisión inicial](docs/REQUIREMENTS_REVIEW.md) documentan el alcance. La [revisión final de requisitos](docs/FINAL_REQUIREMENTS_REVIEW.md), la [revisión de código](docs/FINAL_CODE_REVIEW.md) y el [registro de validación](docs/VALIDATION.md) cierran las puertas técnicas G1–G6 sobre el commit de aplicación `ae65484`. Las actualizaciones posteriores de evidencias son documentales.
